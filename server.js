@@ -14,13 +14,23 @@ app.use(bodyParser.json());
 app.get('/', function(req, res) {
 	res.send('Todo Root');
 });
+// GET ?completed=true/false //q=
 app.get('/todos', function(req, res) {
 	var queryParams = req.query;
 	var filteredTodos = todos;
+	// Handle "completed" parameter
 	if(queryParams.hasOwnProperty('completed') && queryParams.completed === 'true') {
 		filteredTodos = _.where(filteredTodos, {completed: true});
 	} else if (queryParams.hasOwnProperty('completed') && queryParams.completed === 'false') {
 		filteredTodos = _.where(filteredTodos, {completed: false});
+	}
+	// Handle query parameter
+	if(queryParams.hasOwnProperty('q') && queryParams.q.length > 0) {
+		filteredTodos = _.filter(filteredTodos, function(todo) {
+			if(todo.description.toLowerCase().indexOf(queryParams.q.toLowerCase()) !== -1) {
+				return todo;
+			}	
+		});
 	}
 	res.json(filteredTodos);
 })
