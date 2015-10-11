@@ -1,19 +1,28 @@
-var express = require('express');
-var bodyParser = require('body-parser');
-var _ = require('underscore');
 
-var app = express();
-var PORT = process.env.PORT || 3000;
-var todos = [];
-var todoNextId = 1;
+// MODULE SET UP --------------------------------------
+	// Server
+	var express = require('express');
+	var app = express();
+	// Database
+	var db = require('./db.js');
 
-// Parses all JSON request made through req.body
-app.use(bodyParser.json());
+	var bodyParser = require('body-parser'); // Parses info from HTML POST
+	var _ = require('underscore'); // Useful JS methods
+	var morgan = require('morgan'); // Logs requests to console
 
-// Routing
-app.get('/', function(req, res) {
-	res.send('Todo Root');
-});
+
+// SERVER CONFIG ----------------------------------------
+
+	var PORT = process.env.PORT || 8080;
+
+	app.use(express.static(__dirname + '/public')); // Set directory for serving files
+	app.use(bodyParser.json()); // Parses all JSON request made through req.body
+	app.use(morgan('dev')); // Log requests to the console
+
+
+// ROUTING ---------------------------------------------
+
+// API Routes -----------------------------------------
 // GET ?completed=true/false //q=
 app.get('/todos', function(req, res) {
 	var queryParams = req.query;
@@ -45,19 +54,15 @@ app.get('/todos/:id', function(req, res) {
 });
 
 // Respond to POST
-app.post('/todos', function(req, res) {
-	// Request validation
-	var body = _.pick(req.body, 'description', 'completed');
-	if(!_.isBoolean(body.completed) || !_.isString(body.description) || body.description.trim().length === 0) {
-		return res.status(400).send();
-	}
-	// Delete redundant whitespace
-	body.description = body.description.trim();
-
-	body.id = todoNextId;
-	todoNextId++;
-	todos.push(body);
-	res.json(body);
+app.post('/api/todos', function(req, res) {
+	var body = _.pick(req.body, 'text', 'completed');
+	db.Todo.create(body).then(function(todo) {
+		// calling toJSON to extract just the data 
+		// excluding sequelize obj methods
+		res.json(todo.toJSON());
+	}, function(e) {
+		res.status(400).json(e);
+	});
 });
 
 // Respond to DELETE /todos/:id
@@ -98,7 +103,9 @@ app.put('/todos/:id', function(req, res) {
 	res.json(matchTodo);
 });
 
-// Port setup
-app.listen(PORT, function() {
-	console.log("Express listening on port " + PORT);
-})
+
+db.sequelize.sync().then(function() {
+	app.listen(PORT, function() {
+		console.log("Express listening on port " + PORT);
+	})
+});
