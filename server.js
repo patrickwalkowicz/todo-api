@@ -23,7 +23,7 @@
 // ROUTING ---------------------------------------------
 
 // API Routes -----------------------------------------
-// GET ?completed=true/false //q=
+
 app.get('/api/todos', function(req, res) {
 	var query = req.query;
 	var where = {};
