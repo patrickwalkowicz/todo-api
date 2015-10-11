@@ -24,25 +24,27 @@
 
 // API Routes -----------------------------------------
 // GET ?completed=true/false //q=
-app.get('/todos', function(req, res) {
-	var queryParams = req.query;
-	var filteredTodos = todos;
-	// Handle "completed" parameter
-	if(queryParams.hasOwnProperty('completed') && queryParams.completed === 'true') {
-		filteredTodos = _.where(filteredTodos, {completed: true});
-	} else if (queryParams.hasOwnProperty('completed') && queryParams.completed === 'false') {
-		filteredTodos = _.where(filteredTodos, {completed: false});
+app.get('/api/todos', function(req, res) {
+	var query = req.query;
+	var where = {};
+
+	if (query.hasOwnProperty('completed') && query.completed === 'true') {
+		where.completed = true;
+	} else if (query.hasOwnProperty('completed') && query.completed === 'false') {
+		where.completed = false;
 	}
-	// Handle query parameter
-	if(queryParams.hasOwnProperty('q') && queryParams.q.length > 0) {
-		filteredTodos = _.filter(filteredTodos, function(todo) {
-			if(todo.description.toLowerCase().indexOf(queryParams.q.toLowerCase()) !== -1) {
-				return todo;
-			}	
-		});
+	if (query.hasOwnProperty('q') && query.q.length > 0) {
+		where.text = {
+			$like: "%" + query.q + "%"
+		}
 	}
-	res.json(filteredTodos);
-})
+
+	db.Todo.findAll({where: where}).then(function(todos) {
+		res.json(todos);
+	}, function(e) {
+		res.status(500).send();
+	});
+});
 
 app.get('/api/todos/:id', function(req, res) {
 	var todoId = parseInt(req.params.id);
