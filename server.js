@@ -43,14 +43,18 @@ app.get('/todos', function(req, res) {
 	}
 	res.json(filteredTodos);
 })
-app.get('/todos/:id', function(req, res) {
+
+app.get('/api/todos/:id', function(req, res) {
 	var todoId = parseInt(req.params.id);
-	var matchTodo = _.findWhere(todos, {id: todoId});
-	if (matchTodo){
-		res.json(matchTodo)
-	} else {
-		res.status(404).send();
-	}
+	db.Todo.findById(todoId).then(function(todo) {
+		if (!!todo) {
+			res.status(200).json(todo.toJSON());
+		} else {
+			res.status(404).send();
+		}
+	}, function(e) {
+		res.status(500).send(e);
+	});
 });
 
 // Respond to POST
@@ -66,7 +70,7 @@ app.post('/api/todos', function(req, res) {
 });
 
 // Respond to DELETE /todos/:id
-app.delete('/todos/:id', function(req, res) {
+app.delete('/api/todos/:id', function(req, res) {
 	var todoId = parseInt(req.params.id);
 	var matchTodo = _.findWhere(todos, {id: todoId});
 	if (matchTodo) {
