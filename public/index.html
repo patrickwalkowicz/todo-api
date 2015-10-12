@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+
+<html ng-app="todoApp">
+<head>
+    
+    <meta charset="utf-8">
+    <!-- Mobile optimisation -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Todo App</title>
+
+    <link href='https://fonts.googleapis.com/css?family=Dosis' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="stylesheet.css">
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script>
+    <script src="core.js"></script>
+
+</head>
+<body ng-controller="mainController">
+    <div class="container">
+        <div class="jumbotron text-center header">
+            <h1>todos <span class="todos-label label-info">{{ todos.length }}</span></h1>
+        </div>
+
+
+       <!-- FORM TO CREATE TODOS -->
+        <div id="todo-form" class="row">
+            <div class="col-sm-6 col-sm-offset-3 text-center">
+                <form ui-keypress="{13:'createTodo($event)'}">
+                    <!-- invoke createToDo() by pressing ENTER -->
+                    <button id="submit-button" type="submit" ng-click="createTodo()">Add</button>
+                        <!-- BINDS VALUE to formData.text IN ANGULAR -->
+                        <input type="text" class="form-control input-box text-center" placeholder="What needs to be done?" ui-keypress="{13:'createTodo($event)'}" ng-model="formData.text">
+                    </form>                       
+            </div>
+        </div>
+
+        <!-- TODO LIST -->
+        <div id="todo-list" class="row">
+            <div class="col-sm-6 col-sm-offset-3">
+                <div id="todo-container" ng-repeat="todo in todos">
+                    <div class="todo-item">
+                        <label>
+                            <input type="checkbox" ng-click="deleteTodo(todo.id)"> {{ todo.text }}
+                        </label>
+                    </div>
+                </div>
+                <div class="bottom-panel">
+                        <!-- Bottom panel -->
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

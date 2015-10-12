@@ -1,0 +1,92 @@
+html {
+	overflow-y:scroll;
+}
+
+body {
+	background-image: url('img/bg.jpg');
+	background-repeat: no-repeat;
+	background-size: cover;
+	padding-top:50px;
+	
+}
+
+div h1 {
+	font-family: 'Dosis', sans-serif;
+}
+
+.header {
+	background: rgb(238, 238, 238);
+    background: RGBA(238, 238, 238, 0.9);
+    
+}
+#todo-form {
+	padding-top: 50px;
+}
+
+.todos-label {
+	display: inline;
+	padding: 0.1em 0.4em 0.1em;
+	font-size: 75%;
+	font-weight: bold;
+	line-height: 1;
+	color: #FFF;
+	text-align: center;
+	white-space: nowrap;
+	vertical-align: baseline;
+	border-radius: 0.25em;
+
+}
+
+.todo-item  {
+	border-left: 1px solid #ccc;
+	border-right: 1px solid #ccc;
+	border-bottom: 1px solid #ccc;
+	margin:0;
+	padding: 7px;
+	height: 45px;
+	background-color: #eee;
+	background: rgb(238, 238, 238);
+    background: RGBA(238, 238, 238, 0.7)
+}
+
+.input-box {
+	border-radius: 6px 6px 0 0;
+	height: 45px;
+	padding: 10px 16px;
+	font-size: 18px;
+	line-height: 1.33;
+	border-bottom: none;
+	background: RGBA(238, 238, 238, 0.9)
+}
+
+
+#todo-container:first-child .todo-item  {
+	border-top: 1px solid #ccc;
+}
+
+#todo-container:last-child .todo-item  {
+	border-radius: 0 0 6px 6px;
+}
+
+.bottom-panel  {
+	border-left: 1px solid #ccc;
+	border-right: 1px solid #ccc;
+	border-bottom: 1px solid #ccc;
+	margin:0;
+	padding: 7px;
+	height: 45px;
+    border-radius: 0 0 6px 6px;
+    background: RGBA(238, 238, 238, 0.9)
+
+}
+
+#submit-button {
+	position: absolute; 
+	left: -9999px; 
+	width: 1px; 
+	height: 1px;
+}
+
+#todo-list {
+	margin-bottom: 50px;
+}
